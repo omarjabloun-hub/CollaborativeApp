@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "O06q8eFAjQlYF24rwRGyBnUYwnH+NCWPS/FFI40+vlgYY9DOmnNQM9eCYKbCCPqwiH14eY4Bum2+oCg+poLZPw==",
+  "success": true,
+  "projectFilePath": "D:\\Soft\\DistributedSystems\\TP1\\CollaborativeApp\\TextEditor2\\TextEditor2.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\jablo\\.nuget\\packages\\rabbitmq.client\\6.5.0\\rabbitmq.client.6.5.0.nupkg.sha512",
+    "C:\\Users\\jablo\\.nuget\\packages\\system.memory\\4.5.5\\system.memory.4.5.5.nupkg.sha512",
+    "C:\\Users\\jablo\\.nuget\\packages\\system.threading.channels\\7.0.0\\system.threading.channels.7.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

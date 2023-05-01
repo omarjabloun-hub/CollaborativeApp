@@ -5,8 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CollaborativeApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
+        Title="MainWindow" Height="830" Width="512">
+    <Grid Height="819" Background="#FF9A9A9A" VerticalAlignment="Top" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="23*"/>
+            <ColumnDefinition Width="153*"/>
+            <ColumnDefinition Width="24*"/>
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="Text1"  Grid.Column="1" HorizontalAlignment="Center" Height="144" Margin="0,191,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="374" BorderBrush="#FF3E67E4" Background="#FFFFC6C6"/>
+        <TextBox x:Name="Text2"  Grid.Column="1" HorizontalAlignment="Center" Height="138" Margin="0,389,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="374" BorderBrush="#FF3E67E4" Background="#FFC6FFD7"/>
+        <TextBox x:Name="Text3" Grid.Column="1" HorizontalAlignment="Center" Height="130" Margin="0,580,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="374" BorderBrush="#FF3E67E4" Background="#FFFFFDC6"/>
+        <Label x:Name="UserInfoLabel" Grid.Column="1" Content="" HorizontalAlignment="Center" Height="67" Margin="0,67,0,0" VerticalAlignment="Top" Width="320" Background="#FFC7C7C7"/>
     </Grid>
 </Window>

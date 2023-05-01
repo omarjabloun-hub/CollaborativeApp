@@ -24,5 +24,25 @@ namespace CollaborativeApp
         {
             InitializeComponent();
         }
+
+        // on focus try to take access from rabbitmq
+        // on lost focus try to release access from rabbitmq
+        // on close try to release access from rabbitmq
+        public void OnFocus(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("OnFocus");
+            
+        }
+        public void OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("OnLostFocus");
+        }
+        public void OnClose(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("OnClose");
+        }
+
+
+        
     }
 }

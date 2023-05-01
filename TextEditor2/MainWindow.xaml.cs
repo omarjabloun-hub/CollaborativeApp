@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using System;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using RabbitMQ.Client;
 
 namespace TextEditor2
 {
@@ -21,11 +13,9 @@ namespace TextEditor2
     /// </summary>
     public partial class MainWindow : Window
     {
-        private TextBox textBox1;
         public MainWindow()
         {
             InitializeComponent();
-            CreateUI();
         }
 
         private void CreateUI()
@@ -50,7 +40,7 @@ namespace TextEditor2
             Grid.SetRow(textBlock1, 0);
             Grid.SetColumn(textBlock1, 0);
             mainGrid.Children.Add(textBlock1);
-            
+
             // Create the second TextBlock
             TextBlock textBlock2 = new TextBlock();
             textBlock2.Text = "Section 2";
@@ -61,7 +51,7 @@ namespace TextEditor2
             Grid.SetRow(textBlock2, 0);
             Grid.SetColumn(textBlock2, 1);
             mainGrid.Children.Add(textBlock2);
-            
+
             // Create the first TextBox
             TextBox textBox1 = new TextBox();
             textBox1.Name = "TextBox1";
@@ -73,6 +63,7 @@ namespace TextEditor2
             textBox1.Foreground = Brushes.White;
             textBox1.BorderBrush = new SolidColorBrush(Color.FromRgb(0, 122, 204));
             textBox1.BorderThickness = new Thickness(1);
+            textBox1.TextChanged += TextBox_TextChanged;
             Grid.SetRow(textBox1, 1);
             Grid.SetColumn(textBox1, 0);
             mainGrid.Children.Add(textBox1);
@@ -87,7 +78,7 @@ namespace TextEditor2
             textBox2.Foreground = Brushes.White;
             textBox2.BorderBrush = new SolidColorBrush(Color.FromRgb(0, 122, 204));
             textBox2.BorderThickness = new Thickness(1);
-            textBox2.TextChanged += TextBox_TextChanged;
+
             Grid.SetRow(textBox2, 1);
             Grid.SetColumn(textBox2, 1);
             mainGrid.Children.Add(textBox2);
@@ -95,7 +86,7 @@ namespace TextEditor2
             // Set the main window's content to the main grid
             this.Content = mainGrid;
         }
-        
+
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             // send message to RabbitMQ queue
@@ -104,26 +95,56 @@ namespace TextEditor2
             using var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
 
-            channel.QueueDeclare(queue: "task_queue",
+            channel.QueueDeclare(queue: "task_queue_2",
                 durable: true,
                 exclusive: false,
                 autoDelete: false,
                 arguments: null);
 
-            var message = e.;
+            var message = TextBox2.Text;
             var body = Encoding.UTF8.GetBytes(message);
 
             var properties = channel.CreateBasicProperties();
             properties.Persistent = true;
 
             channel.BasicPublish(exchange: string.Empty,
-                routingKey: "task_queue",
+                routingKey: "task_queue_2",
                 basicProperties: properties,
                 body: body);
             Console.WriteLine($" [x] Sent {message}");
 
             Console.WriteLine(" Press [enter] to exit.");
             Console.ReadLine();
+        }
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            var factory = new ConnectionFactory { HostName = "localhost" };
+            using var connection = factory.CreateConnection();
+            using var channel = connection.CreateModel();
+
+            channel.QueueDeclare(queue: "task_queue_2",
+                                    durable: true,
+                                    exclusive: false,
+                                    autoDelete: false,
+                                    arguments: null);
+
+            Console.WriteLine(" [*] Waiting for messages.");
+
+            var consumer = new EventingBasicConsumer(channel);
+            consumer.Received += (model, ea) =>
+            {
+                var body = ea.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
+                Dispatcher.Invoke(() => TextBox2.Text = message);
+                Console.WriteLine($" [x] Received {message}");
+            };
+            channel.BasicConsume(queue: "task_queue_2",
+                                    autoAck: true,
+                                    consumer: consumer);
+
+            Console.WriteLine(" Press [enter] to exit.");
+            Console.ReadLine();
+            
         }
     }
 }
